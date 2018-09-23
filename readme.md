@@ -31,12 +31,15 @@ node app.js
 
 ## :v: Greetz 
 
-
-JoaoVirgili<br>
-Pride<br>
-Conspiracionista<br>
-Dido32<br>
-Evo0o0<br>
+```
+JoaoVirgili
+Pride
+Conspiracionista
+Dido32
+Evo0o0
+Princess Leia
+Dragoso
+```
 
 
 

@@ -185,14 +185,14 @@ io.on('connection', function (socket) {
                 return false;
             }
         }
-        let victory = victoryPattern(game);
         io.in(socket.room).emit('resposta sala', game);
+        let victory = victoryPattern(game);
         if(victory === 1){
             io.in(socket.room).emit('erro sala', {message: "O Jogador " + io.sockets.sockets[game.x].name + " ganhou"});
         }else if(victory === 2){
             io.in(socket.room).emit('erro sala', {message: "O Jogador "+ io.sockets.sockets[game.x].name +" ganhou"});
         }else{
-
+            io.in(socket.room).emit('resposta sala', game);
         }
 
     });
