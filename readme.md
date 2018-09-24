@@ -5,11 +5,8 @@
 </h1>
 
 <h3 align="center">
-    A Tic Tac Toe game maded with Nodejs and Socket.io
+    An Tic-Tac-Toe game made in node.js and socket.io for study purposes.
 </h3> 
-
-
-
 
 ## :rocket: 5 minutes quick start
 
@@ -22,7 +19,7 @@ npm install
 
 ## :computer: Running the server
 
-:bulb: After all the dependencies have been installed, you can run the server using the following command:
+:bulb: After all the dependencies have been installed, you can run the server on the Windows running the file <strong>run-server.bat</strong>. But if you are a Linux user. just type the following command:
 ```
 node app.js
 ```

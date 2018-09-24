@@ -197,6 +197,12 @@
         }
         $("#turno").html(data.turn)
     })
+
+    socket.on("reiniciar",function(){
+        $(".infos").addClass('d-none')
+        $(".vai").removeClass('d-none');
+        $(".game").html('')
+    });
     $(document).on('click','.vai',function(){
 
         socket.emit('iniciar jogo')
