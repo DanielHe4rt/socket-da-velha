@@ -259,12 +259,8 @@ io.on('connection', function (socket) {
         }
         // A linha abaixo sinaliza todos na sala que a jogada foi feita e o turno trocado.
         io.in(socket.room).emit('resposta sala', game);
-        // Se a quantidade de jogadas forem = 9, é declarado empate e a partida é reiniciada.
-        if(game.moves.length === 9){
-            io.in(socket.room).emit('erro sala', {message: "Vocês empataram."});
-            io.in(socket.room).emit('reiniciar');
-            return false;
-        }
+        
+       
         // Função de vitória, com retorno 1 (X) e 2 (O)
         let victory = victoryPattern(game);
         if(victory === 1){
@@ -274,7 +270,12 @@ io.on('connection', function (socket) {
             io.in(socket.room).emit('erro sala', {message: "O Jogador "+ io.sockets.sockets[game.o].name +" ganhou"});
             io.in(socket.room).emit('reiniciar');
         }else{
-            
+            // Se a quantidade de jogadas forem = 9, é declarado empate e a partida é reiniciada.
+            if(game.moves.length === 9){
+                io.in(socket.room).emit('erro sala', {message: "Vocês empataram."});
+                io.in(socket.room).emit('reiniciar');
+                return false;
+            }
         }
 
     });
