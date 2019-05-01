@@ -27,8 +27,6 @@ function victoryPattern(game){
     for(i in game.moves){
         game.moves[i].player === "X" ? x.push(parseInt(game.moves[i].space)) : o.push(parseInt(game.moves[i].space));
     };
-    console.log(x)
-    console.log(o)
     // Loop para todos os padrões de vitórias (Linha 17 ~ 19)
     for(i in victory){
         let countX = 0;
@@ -88,7 +86,7 @@ function get2ndPlayer(socket){
 function getPlayers(socket){
     for (i in rooms) {
         if (rooms[i].name === socket.room) {
-            return rooms[i].players.length;
+            return rooms[i].players;
         }
     }
 }
@@ -117,7 +115,7 @@ io.on('connection', function (socket) {
             socket.join(`${data.name}`);
             socket.status = true;
             let numPlayers = getPlayers(socket);
-            io.in(socket.room).emit('info sala',{status: true,players: numPlayers});
+            io.in(socket.room).emit('info sala',{status: true,players: numPlayers, playerStatus: true});
             return false;
         } else if (socket.room) {
             socket.emit('erro sala', {message:  "Você já tem uma sala"})
@@ -139,9 +137,9 @@ io.on('connection', function (socket) {
         socket.join(`${data.name}`);
         rooms.push({name: data.name, players: [{id: socket.id, name: socket.name}]});
         let numPlayers = getPlayers(socket);
-        io.in(socket.room).emit('info sala',{status: true,players: numPlayers});
+        io.in(socket.room).emit('info sala',{status: true,players: numPlayers, playerStatus: true});
         
-        console.log(rooms)
+        
     });
     // Quando recebido o pacote "entrar sals" irá ser executado a função abaixo
     socket.on('entrar sala', function (data) {
@@ -165,10 +163,14 @@ io.on('connection', function (socket) {
             socket.join(`${data.name}`);
             socket.status = true;
             let numPlayers = getPlayers(socket);
-            io.in(socket.room).emit('info sala',{status: true,players: numPlayers})
+            io.in(socket.room).emit('info sala',{status: true,players: numPlayers, playerStatus: true})
         }
-        console.log(rooms)
+        
     });
+
+    socket.on('mensagem', function data(data) {
+        io.in(socket.room).emit('message',{name: socket.name, message: data.message});
+    })
     // Quando recebido o pacote "iniciar jogo", irá ser executada a função abaixo
     socket.on('iniciar jogo',function(){
         // Checa se o socket em questão está em alguma sala.
@@ -299,10 +301,8 @@ io.on('connection', function (socket) {
         socket.leave(socket.room);
         let numPlayers = getPlayers(socket);
         // Avisa os jogadores da sala.
-        io.in(socket.room).emit('info sala',{status: true,players: numPlayers});
+        io.in(socket.room).emit('info sala',{status: true,players: numPlayers, playerStatus: false});
         delete socket.room;
-        console.log(rooms)
-
     });
     socket.on('disconnect', function () {
         for (i in rooms) {
@@ -318,7 +318,7 @@ io.on('connection', function (socket) {
             }
         }
         let numPlayers = getPlayers(socket);
-        io.in(socket.room).emit('info sala',{status: true,players: numPlayers});
+        io.in(socket.room).emit('info sala',{status: true,players: numPlayers, playerStatus: false});
         delete users[socket.id];
     })
 });

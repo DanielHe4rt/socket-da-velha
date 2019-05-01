@@ -88,7 +88,8 @@
                 </button>
             </div>
             <div class="modal-body">
-                <button class="btn btn-primary vai" disabled>Começar o Jogo</button><br>
+                <p>Jogadores na sala: <strong id="players"></strong></p>
+                <button class="btn btn-primary btn-block vai" disabled>Começar o Jogo</button><br>
                 <div class="row text-center infos d-none">
                     <div class="col">
                         <h3>Você é o <strong id="eu"></strong></h3>
@@ -100,10 +101,31 @@
                 <table class="table text-center table-bordered game">
 
                 </table>
+                <form id="formChat">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="card" >
+                                <div class="card-header">Chat</div>
+                                <div class="card-body" style="overflow-x: auto; max-height:170px; height:170px;" id="chat">
+                                    
+                                </div>
+                            </div>
+                            <hr>
+                        </div>
+                        <div class="col-10" >
+                            <div class="form-group">
+                                <input class="form-control" name="message" type="text"  id="message">
+                            </div>
+                        </div>
+                        <div class="col-2" >
+                            <div class="form-group">
+                                <input type="submit" class="btn btn-primary btn-block" value="Enviar">
+                            </div>
+                        </div>
+                    </div>
+                </form>
             </div>
-            <div class="modal-footer">
-                N sei
-            </div>
+           
         </div>
     </div>
 </div>
@@ -130,7 +152,7 @@
         for(let i = 0; i <= 2; i++){
             string += "<tr>"
             for(let k = 0; k <= 2; k++){
-                string += `<td id='${count}'></td>`
+                string += `<td id='${count}' style="height: 100px; max-height: 100px; font-size:50px"></td>`
                 count++;
             }
             string += "</tr>";
@@ -169,8 +191,13 @@
         });
     });
     socket.on('info sala',function(data){
-        data.players === 2 ? $(".vai").attr('disabled',false) : $(".vai").attr('disabled',true);
-        data.players === 1 ?  $(".game").html('') : ''
+        
+        let players = data.players.map((player) => player.name)
+        players = players.join(' | ')
+        $("#players").html(players)
+        $("#chat").append('<p>Servidor: Um jogador '+ (data.playerStatus ? 'entrou na' : 'saiu da') +' sala</p>')
+        data.players.length === 2 ? $(".vai").attr('disabled',false) : $(".vai").attr('disabled',true);
+        data.players.length === 1 ?  $(".game").html('') : ''
         if(data.status){
             $("#criar_salinha").modal('hide');
             $("#iniciar_jogo").modal('show')
@@ -203,6 +230,11 @@
         $(".vai").removeClass('d-none');
         $(".game").html('')
     });
+
+    socket.on("message",function(data){
+        $("#chat").append('<p>' + data.name + ': ' + data.message + '</p>')
+        $('#chat').scrollTop($('#chat')[0].scrollHeight);
+    });
     $(document).on('click','.vai',function(){
 
         socket.emit('iniciar jogo')
@@ -217,6 +249,14 @@
         socket.emit('nova sala',{'name': $('#name').val()});
         console.log('foi')
     });
+
+    $("#formChat").submit((e) => {
+        e.preventDefault()
+        console.log($("#message").val())
+        socket.emit('mensagem',{'message': $('#message').val()});
+        $("#message").val('')
+    })
+
     $(document).on('click','#sair',function(){
         socket.emit('sair');
         let btn = $(".vai");
