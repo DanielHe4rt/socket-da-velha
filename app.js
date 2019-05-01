@@ -115,7 +115,12 @@ io.on('connection', function (socket) {
             socket.join(`${data.name}`);
             socket.status = true;
             let numPlayers = getPlayers(socket);
-            io.in(socket.room).emit('info sala',{status: true,players: numPlayers, playerStatus: true});
+            io.in(socket.room).emit('info sala',{
+                status: true,
+                players: numPlayers,
+                playerStatus: true,
+                room: data.name
+            });
             return false;
         } else if (socket.room) {
             socket.emit('erro sala', {message:  "Você já tem uma sala"})
@@ -137,7 +142,12 @@ io.on('connection', function (socket) {
         socket.join(`${data.name}`);
         rooms.push({name: data.name, players: [{id: socket.id, name: socket.name}]});
         let numPlayers = getPlayers(socket);
-        io.in(socket.room).emit('info sala',{status: true,players: numPlayers, playerStatus: true});
+        io.in(socket.room).emit('info sala',{
+            status: true,
+            players: numPlayers,
+            playerStatus: true,
+            room: data.name
+        });
         
         
     });
@@ -163,7 +173,12 @@ io.on('connection', function (socket) {
             socket.join(`${data.name}`);
             socket.status = true;
             let numPlayers = getPlayers(socket);
-            io.in(socket.room).emit('info sala',{status: true,players: numPlayers, playerStatus: true})
+            io.in(socket.room).emit('info sala',{
+                status: true,
+                players: numPlayers,
+                playerStatus: true,
+                room: socket.room
+            });
         }
         
     });
@@ -302,7 +317,12 @@ io.on('connection', function (socket) {
         socket.leave(socket.room);
         let numPlayers = getPlayers(socket);
         // Avisa os jogadores da sala.
-        io.in(socket.room).emit('info sala',{status: true,players: numPlayers, playerStatus: false});
+        io.in(socket.room).emit('info sala',{
+            status: true,
+            players: numPlayers,
+            playerStatus: false,
+            room: socket.room
+        });
         delete socket.room;
     });
     socket.on('disconnect', function () {
@@ -319,7 +339,12 @@ io.on('connection', function (socket) {
             }
         }
         let numPlayers = getPlayers(socket);
-        io.in(socket.room).emit('info sala',{status: true,players: numPlayers, playerStatus: false});
+        io.in(socket.room).emit('info sala',{
+            status: true,
+            players: numPlayers,
+            playerStatus: false,
+            room: socket.room
+        });
         delete users[socket.id];
     })
 });

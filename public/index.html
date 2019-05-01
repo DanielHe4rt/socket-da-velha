@@ -60,20 +60,16 @@
                 </button>
             </div>
             <form id="criar_sala">
-
-            <div class="modal-body">
-
+                <div class="modal-body">
                     <div class="form-group">
                         <label for="recipient-name" class="col-form-label">Digite o nome da sala:</label>
                         <input type="text" class="form-control" name="name" id="name" autocomplete="off" >
                     </div>
-
-
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <input type="submit" class="btn btn-primary" value="Criar">
-            </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <input type="submit" class="btn btn-primary" value="Criar">
+                </div>
             </form>
         </div>
     </div>
@@ -82,7 +78,7 @@
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Modal title</h5>
+                <h5 class="modal-title">Sala: <strong id="room"></strong></h5>
                 <button type="button" class="close" id="sair" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -195,6 +191,7 @@
         let players = data.players.map((player) => player.name)
         players = players.join(' | ')
         $("#players").html(players)
+        $("#room").html(data.room)
         $("#chat").append('<p>Servidor: Um jogador '+ (data.playerStatus ? 'entrou na' : 'saiu da') +' sala</p>')
         data.players.length === 2 ? $(".vai").attr('disabled',false) : $(".vai").attr('disabled',true);
         data.players.length === 1 ?  $(".game").html('') : ''
