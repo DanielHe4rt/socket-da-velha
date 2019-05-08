@@ -78,7 +78,7 @@
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Sala: <strong id="room"></strong></h5>
+                <h5 class="modal-title text-align-center">Sala: <strong id="room"></strong></h5>
                 <button type="button" class="close" id="sair" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -115,7 +115,7 @@
                         </div>
                         <div class="col-2" >
                             <div class="form-group">
-                                <input type="submit" class="btn btn-primary btn-block" value="Enviar">
+                                <button type="submit" class="btn btn-primary btn-block">Enviar</button>
                             </div>
                         </div>
                     </div>
@@ -148,7 +148,7 @@
         for(let i = 0; i <= 2; i++){
             string += "<tr>"
             for(let k = 0; k <= 2; k++){
-                string += `<td id='${count}' style="height: 100px; max-height: 100px; font-size:50px"></td>`
+                string += `<td id='${count}'></td>`
                 count++;
             }
             string += "</tr>";
@@ -192,7 +192,8 @@
         players = players.join(' | ')
         $("#players").html(players)
         $("#room").html(data.room)
-        $("#chat").append('<p>Servidor: Um jogador '+ (data.playerStatus ? 'entrou na' : 'saiu da') +' sala</p>')
+        console.log(data);
+        $("#chat").append('<p><strong>Servidor</strong>: Um jogador '+ (data.playerStatus ? 'entrou na' : 'saiu da') +' sala</p>')
         data.players.length === 2 ? $(".vai").attr('disabled',false) : $(".vai").attr('disabled',true);
         data.players.length === 1 ?  $(".game").html('') : ''
         if(data.status){
@@ -229,7 +230,7 @@
     });
 
     socket.on("message",function(data){
-        $("#chat").append('<p>' + data.name + ': ' + data.message + '</p>')
+        $("#chat").append('<p><strong>' + data.name + '</strong>: ' + data.message + '</p>')
         $('#chat').scrollTop($('#chat')[0].scrollHeight);
     });
     $(document).on('click','.vai',function(){

@@ -1,0 +1,7 @@
+.game tr  td{
+    height: 140px; 
+    max-height: 100px; 
+    max-width:10px; 
+    white-space:no-wrap; 
+    font-size:50px
+}
