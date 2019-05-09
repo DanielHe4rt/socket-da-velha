@@ -5,3 +5,7 @@
     white-space:no-wrap; 
     font-size:50px
 }
+.game tr td {
+    box-sizing: border-box;
+    line-height: 100px;
+}
