@@ -5,3 +5,8 @@
     white-space:no-wrap; 
     font-size:50px
 }
+@media (max-width: 576px){
+    .xs-none {
+        display: none!important;
+    }
+}
