@@ -183,19 +183,10 @@
         socket.emit('jogada',{posicao: posicao});
 
     });
-    $(document).ready(function(){
-        while(true){
-            let name = prompt("Digite um nickname");
-            if(!name || !name.trim()) {
-                continue;
-            } else {
-                return socket.emit('nickname',{nick: name.trim()});
-            }
-        }
-    });
 
 
-    })
+
+   
 
     checkUser();
 
