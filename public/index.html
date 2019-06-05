@@ -156,7 +156,20 @@
         }
         return string;
     }
-
+    function checkUser(){
+        const userName = window.localStorage.getItem('socketName');
+        if (userName){
+            socket.emit('nickname',{nick: userName});
+            console.log(socket)
+        }else{
+            $(document).ready(async function(){
+                let name = await prompt("Digite um nickname");
+                window.localStorage.setItem('socketName', name);
+                socket.emit('nickname',{nick: name});
+                console.log(socket)
+            });
+        }
+    }
     function addUserRow(data){
         return `
         <tr>
@@ -168,6 +181,7 @@
     $(document).on('click',".game td",function(){
         let posicao = $(this).attr('id');
         socket.emit('jogada',{posicao: posicao});
+
     });
     $(document).ready(function(){
         while(true){
@@ -179,6 +193,11 @@
             }
         }
     });
+
+
+    })
+
+    checkUser();
 
     socket.on('users',function(data){
         $("#users").html('');

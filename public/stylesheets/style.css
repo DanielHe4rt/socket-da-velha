@@ -5,8 +5,14 @@
     white-space:no-wrap; 
     font-size:50px
 }
+
 @media (max-width: 576px){
     .xs-none {
         display: none!important;
     }
+}
+.game tr td {
+    box-sizing: border-box;
+    line-height: 100px;
+
 }
