@@ -71,16 +71,14 @@ http.listen(3000, function() {
     @Input Obj Socket
 */
 function get2ndPlayer(socket) {
-  for (i in rooms) {
-    if (rooms[i].name === socket.room) {
-      if (rooms[i].players.length === 1) {
-        return false;
-      }
-      return rooms[i].players[0].id === socket.id
-        ? rooms[i].players[1].id
-        : rooms[i].players[0].id;
-    }
+  let room = rooms.find(room => room.name === socket.room);
+  console.log(room);
+  if (room.players.length === 1) {
+    return false;
   }
+  return room.players[0].id === socket.id
+    ? room.players[1].id
+    : room.players[0].id;
 }
 /*
     Função utilizada pra pegar o numero de players numa sala.
@@ -355,6 +353,7 @@ io.on("connection", function(socket) {
 setInterval(function() {
   var pacote = [];
   var salas = [];
+
   for (var i in users) {
     var socket = users[i];
     pacote.push({
@@ -362,18 +361,16 @@ setInterval(function() {
       status: socket.status
     });
   }
-  for (i in rooms) {
-    let room = rooms[i];
-    if (!room.players) {
-      rooms.splice(i, 1);
-      continue;
-    }
-    salas.push({
-      name: room.name,
-      owner: room.players[0].name,
-      players: room.players.length
+  rooms
+    .filter(room => room.players)
+    .forEach(room => {
+      console.log(salas);
+      salas.push({
+        name: room.name,
+        owner: room.players[0].name,
+        players: room.players.length
+      });
     });
-  }
   io.emit("rooms", salas);
   io.emit("users", pacote);
 }, 1000);
