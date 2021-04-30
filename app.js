@@ -58,11 +58,11 @@ function victoryPattern(game) {
 // Inclui o diretório de arquivos para você poder acessar no projeto
 app.use(express.static(__dirname + "/public"));
 // Chama o index.html
-app.get("/", function(req, res) {
+app.get("/", function (req, res) {
   res.sendFile(__dirname + "/public/index.html");
 });
 // Inicia o servidor na porta determinada
-http.listen(3000, function() {
+http.listen(3000, function () {
   console.log("Servidor iniciado na porta *:3000");
 });
 
@@ -95,14 +95,14 @@ function getGameId(socket) {
   return games.findIndex(game => game.room === socket.room);
 }
 // Ao receber uma nova conexão, poderá ser executado todos os pacotes que o cliente enviar sendo eles descritos abaixo
-io.on("connection", function(socket) {
+io.on("connection", function (socket) {
   socket.name = "Jogador";
   socket.status = false;
   // Quando conectado, o usuário é salvo no Objeto "users" para poder ser usado posteriormente
   users[socket.id] = socket;
 
   // Quando recebido o pacote "jogada", irá ser executada a função abaixo
-  socket.on("jogada", function(data) {
+  socket.on("jogada", function (data) {
     // Retorna o jogo do socket que fez a jogada.
     let game = games[getGameId(socket)];
     // Checa se foi feita alguma jogada
@@ -172,7 +172,7 @@ io.on("connection", function(socket) {
       }
     }
   });
-  socket.on("nova sala", function(data) {
+  socket.on("nova sala", function (data) {
     // Se existe alguma sala no nosso objeto Rooms
     if (rooms.length === 0) {
       socket.room = data.name;
@@ -220,7 +220,7 @@ io.on("connection", function(socket) {
     });
   });
   // Quando recebido o pacote "entrar sals" irá ser executado a função abaixo
-  socket.on("entrar sala", function(data) {
+  socket.on("entrar sala", function (data) {
     if (socket.room) {
       socket.emit("erro sala", { message: "Você já está em uma sala." });
     } else {
@@ -260,7 +260,7 @@ io.on("connection", function(socket) {
     });
   });
   // Quando recebido o pacote "iniciar jogo", irá ser executada a função abaixo
-  socket.on("iniciar jogo", function() {
+  socket.on("iniciar jogo", function () {
     // Checa se o socket em questão está em alguma sala.
     if (!socket.room) {
       socket.emit("erro sala", {
@@ -292,12 +292,12 @@ io.on("connection", function(socket) {
     games.push(data);
     io.in(socket.room).emit("info jogo", data);
   });
-  socket.on("nickname", function(data) {
+  socket.on("nickname", function (data) {
     socket.name = data.nick;
   });
 
   // Quando recebido o pacote "sair", irá ser executada a função abaixo
-  socket.on("sair", function() {
+  socket.on("sair", function () {
     // Loop em todas as salas para saber em qual o socket se encontra.
     rooms = rooms
       .map(room => {
@@ -325,20 +325,20 @@ io.on("connection", function(socket) {
     });
     delete socket.room;
   });
-  socket.on("disconnect", function() {
-    rooms = rooms
-      .map(room => {
-        if (room.name === socket.room) {
-          return {
-            ...room,
-            players: room.players.filter(player => socket.id !== player.id)
-          };
+
+  socket.on("disconnect", function () {
+    for (i in rooms) {
+      if (rooms[i].name === socket.room) {
+        for (k in rooms[i].players) {
+          if (rooms[i].players[k].name === socket.name) {
+            rooms[i].players.splice(k, 1);
+          }
         }
-        return room;
-      })
-      .filter(room => {
-        return room.players.length > 0;
-      });
+        if (rooms[i].players.length === 0) {
+          rooms.splice(i, 1);
+        }
+      }
+    }
 
     let numPlayers = getPlayers(socket);
     io.in(socket.room).emit("info sala", {
@@ -350,7 +350,7 @@ io.on("connection", function(socket) {
     delete users[socket.id];
   });
 });
-setInterval(function() {
+setInterval(function () {
   var pacote = [];
   var salas = [];
 
